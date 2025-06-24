@@ -63,6 +63,31 @@ class TailTracker:
         return path
 
     def track_tail(self, mask, centre):
+        print(mask.shape)
+        print(mask.dtype)
+        try:
+            binary_mask = (mask > 0).astype(np.uint8)
+            skeleton = skeletonize(mask.astype('uint8'))
+        except Exception as e:
+            print(f"Warning: skeletonization failed: {e}")
+            return np.empty((0,2))
+        skeleton_points = self.longest_path(skeleton, np.array(centre))
+        skeleton_points = skeleton_points[:, ::-1]
+        if self.n_points:
+            current_indices = np.arange(len(skeleton_points))
+            interpolate_indices = np.linspace(0, len(skeleton_points) - 1, self.n_points)
+            new_x = np.interp(interpolate_indices, current_indices, skeleton_points[:, 0])
+            new_y = np.interp(interpolate_indices, current_indices, skeleton_points[:, 1])
+            tail_points = np.array([new_x, new_y]).T
+            return tail_points
+        else:
+            return skeleton_points
+
+"""
+the original chunk (line 65 - 84):
+def track_tail(self, mask, centre):
+        print(mask.shape)
+        print(mask.dtype)
         skeleton = skeletonize(mask.astype('uint8'))
         skeleton_points = self.longest_path(skeleton, np.array(centre))
         skeleton_points = skeleton_points[:, ::-1]
@@ -75,3 +100,7 @@ class TailTracker:
             return tail_points
         else:
             return skeleton_points
+
+the try and except chunk was added by ChatGPT
+the original chunk kept crashing because the skeletonization didn't go through properly.
+"""
