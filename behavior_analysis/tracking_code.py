@@ -15,13 +15,13 @@ def run_tracking(paths):
         print(experiment)
         #
         # Update animal info
-        experiment.update()
+        # experiment.update()
         #
         # # Calculate background
         # experiment.calculate_backgrounds(parallel=True, n_processes=20)
         #
         # # Set circular mask threshold
-        # experiment.set_circular_mask()
+        experiment.set_circular_mask()
         #
         # # Calculate mask
         experiment.calculate_circular_mask()
@@ -30,17 +30,17 @@ def run_tracking(paths):
         experiment.set_thresholds()
         #
         # Run tracking
-        # experiment.track(parallel=True, n_processes=20)
+        experiment.track(parallel=True, n_processes=20)
         #
         # Run kinematics
-        # experiment.kinematics(parallel=True, n_processes=20)
+        experiment.kinematics(parallel=True, n_processes=20)
         #
         # Extract bouts
-        # experiment.find_bouts(check_thresholds=False)
+        experiment.find_bouts(check_thresholds=False)
 
 if __name__ == "__main__":
 
-    path = [Path(r"E:\Martin\test")]
+    path = [Path(r"E:\Joyce\test_experiment")]
     run_tracking(path)
 
 

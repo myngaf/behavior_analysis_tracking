@@ -7,7 +7,7 @@ if not sys.warnoptions:
 
 if __name__ == "__main__":
 
-    path = Path(r"E:\Joyce\test_experiment")
+    path = Path(r"C:\Users\manyung.ng\Documents\behaviour_analysis\behavior_analysis_tracking\recordings")
 
     # Create experiment
     # experiment = BehaviorExperiment.create(path) # only do this once
@@ -15,12 +15,12 @@ if __name__ == "__main__":
     # Open experiment
     experiment = BehaviorExperiment.open(path)
     print(experiment)
-
-    # Update animal info
-    experiment.update()
-
-    # Calculate background
-    experiment.calculate_backgrounds(parallel=True, n_processes=20)
+    #
+    # # Update animal info
+    # experiment.update()
+    #
+    # # Calculate background
+    # experiment.calculate_backgrounds(parallel=True, n_processes=20)
 
     # Set tracking threshold
     experiment.set_thresholds()
