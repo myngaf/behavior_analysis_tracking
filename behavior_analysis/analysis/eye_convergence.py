@@ -210,7 +210,7 @@ class EyeConvergenceAnalysis:
             print('Eye convergence score:', self.convergence_score)
         return self.convergence_score
 
-    '''
+    
     def plot_histogram(self, save=False, output_path=None):
         """Plots a histogram of eye vergence angles.
 
@@ -237,7 +237,7 @@ class EyeConvergenceAnalysis:
             self.save_figure(fig, output_path)
         else:
             plt.show()
-
+    '''
     def plot_kernel_density_estimation(self, save=False, output_path=None):
         """Plots a histogram of observed eye vergence angles and the estimated distribution.
 
