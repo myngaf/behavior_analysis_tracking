@@ -1,4 +1,5 @@
 import os
+import tkinter
 from tkinter import filedialog, messagebox
 import sys
 
@@ -116,9 +117,9 @@ def get_directories(directory, return_paths=True):
 
 
 def pickfile(path='.'):  # add filetypes
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.withdraw()
-    f = tkFileDialog.askopenfilename(parent=root, title='Choose a file')
+    f = filedialog.askopenfilename(parent=root, title='Choose a file')
     if f:
         root.destroy()
         del root
@@ -131,9 +132,9 @@ def pickfile(path='.'):  # add filetypes
 
 
 def saveasfile(path='.', filetypes=[], defaultextension=''):  # add filetypes
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.withdraw()
-    f = tkFileDialog.asksaveasfilename(parent=root, title='Choose a filepath to save as', filetypes=filetypes,
+    f = filedialog.asksaveasfilename(parent=root, title='Choose a filepath to save as', filetypes=filetypes,
                                        defaultextension=defaultextension)
     if f:
         root.destroy()
@@ -147,9 +148,9 @@ def saveasfile(path='.', filetypes=[], defaultextension=''):  # add filetypes
 
 
 def pickfiles(path='.', filetypes=[], defaultextension=''):
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.withdraw()
-    f = tkFileDialog.askopenfilenames(parent=root, title='Choose a file', filetypes=filetypes)
+    f = filedialog.askopenfilenames(parent=root, title='Choose a file', filetypes=filetypes)
     if f:
         f = root.tk.splitlist(f)
         root.destroy()
@@ -163,9 +164,9 @@ def pickfiles(path='.', filetypes=[], defaultextension=''):
 
 
 def pickdir(path='.'):
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.withdraw()
-    dirname = tkFileDialog.askdirectory(parent=root, initialdir=".", title='Please select a directory')
+    dirname = filedialog.askdirectory(parent=root, initialdir=".", title='Please select a directory')
 
     root.destroy()
     if len(dirname) > 0:
@@ -176,8 +177,8 @@ def pickdir(path='.'):
 
 
 def askyesno(title='Display?', text="Use interactive plotting?"):
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.withdraw()
-    tf = tkMessageBox.askyesno(title, text)
+    tf = messagebox.askyesno(title, text)
     root.destroy()
     return tf
