@@ -324,7 +324,10 @@ class EyeData:
         self.metadata = metadata
 
     @classmethod
-    def from_metadata(cls, metadata: Union[pd.DataFrame, str, Path], directory: Union[str, Path], ):
+    def from_metadata(cls, 
+                      metadata: Union[pd.DataFrame, str, Path], 
+                      directory: Union[str, Path], 
+                      tail_only: bool = True):
         """Constructor method for generating EyeData from metadata.
 
         Parameters
@@ -400,3 +403,4 @@ class EyeData:
     #     if self.metadata is not None:
     #         convergence_scores = self.metadata.join(convergence_scores.set_index('ID'), on='ID')
     #     return convergence_scores
+
