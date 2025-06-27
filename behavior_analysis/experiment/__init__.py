@@ -652,7 +652,7 @@ class BehaviorExperiment:
                 if condition is not None:
                     idx = self.animal_data[self.animal_data["ID"] == ID].squeeze().name
                     self.animal_data.loc[idx, "condition"] = condition
-            # self.animal_data.to_csv(self.animal_data_path, index=False)
+            self.animal_data.to_csv(self.animal_data_path, index=False)
             self.animal_columns = self.animal_columns + tuple(["condition"])
             print("Animal conditions saved.")
         else:
