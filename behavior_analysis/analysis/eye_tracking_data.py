@@ -87,7 +87,7 @@ class EyeTrackingData(object):
 
         Parameters
         ----------
-        path : str or experiment.TrackingExperiment
+        path : str or experiment (BehaviorExperiment)
             Complete path to the experiment directory or a TrackingExperiment object.
         """
         print_heading('IMPORTING EYE ANGLE DATA')
@@ -104,13 +104,20 @@ class EyeTrackingData(object):
             # fish_angles = EyeConvergenceAnalyser.import_eye_angles(*kinematics_paths)
             fish_angles = EyeConvergenceAnalyser.import_eye_angles(kinematics_paths)
             eye_data[fish_info.ID] = fish_angles
-        metadata_columns = ['ID', 'date', 'name']
-        if experiment.conditions:
-            metadata_columns.append('condition')
-        else:
-            print("No conditions are set.")
-        metadata = experiment.data[metadata_columns]
+            metadata_columns = ['ID', 'date', 'name']
+            if 'condition' in experiment.animal_data.columns:
+                metadata_columns.append('condition')
+            else:
+                print("No conditions are set.")
+            metadata = experiment.animal_data[metadata_columns]
         return EyeTrackingData(eye_data, metadata=metadata)
+
+        # original code:
+        # metadata_columns = ['ID', 'date', 'name']
+        # if experiment.conditions:
+        #     metadata_columns.append('condition')
+        # metadata = experiment.data[metadata_columns]
+        # return EyeTrackingData(eye_data, metadata=metadata)
 
     @property
     def concatenated_data(self):
@@ -135,7 +142,7 @@ class EyeTrackingData(object):
 
         print_heading('CALCULATING CONVERGENCE SCORES')
         IDs, scores, thresholds = [], [], []
-        for ID, eye_angles in self.data.iteritems():
+        for ID, eye_angles in self.data.iteritems(): #need to fix this!!!
             print_subheading(ID)
 
             ECA = EyeConvergenceAnalyser(eye_angles['convergence'], **kwargs)
