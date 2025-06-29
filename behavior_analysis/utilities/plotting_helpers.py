@@ -16,7 +16,7 @@ class BasePlotting(object):
     """
 
     def __init__(self, **kwargs):
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             rcParams[key] = value
 
     @staticmethod
