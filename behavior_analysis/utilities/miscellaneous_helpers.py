@@ -5,15 +5,15 @@ import cv2
 
 
 def print_heading(s):
-    print '=' * len(s)
-    print s
-    print '=' * len(s)
-    print ''
+    print('=' * len(s))
+    print(s)
+    print('=' * len(s))
+    print('')
 
 
 def print_subheading(s):
-    print s
-    print '-' * len(s)
+    print(s)
+    print('-' * len(s))
 
 
 class Timer(object):
