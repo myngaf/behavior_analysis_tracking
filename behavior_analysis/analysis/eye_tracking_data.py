@@ -261,7 +261,7 @@ class EyeConvergenceAnalyser(BasePlotting):
         print('Importing data ({} files)'.format(len(paths)))
         fish_angles = []
         for i, path in enumerate(paths):
-            print(i + 1,)
+            print(i + 1, )
             kinematics = pd.read_csv(path)
             tracked = kinematics[kinematics['tracked']]
             eye_angles = tracked[['right_angle', 'left_angle']].applymap(np.degrees)
