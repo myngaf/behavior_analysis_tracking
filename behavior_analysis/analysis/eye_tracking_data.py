@@ -15,7 +15,7 @@ from sklearn.neighbors import KernelDensity
 
 class EyeConvergenceAnalyser(BasePlotting):
 
-    def __init__(self, data, bandwidth=2.0, default_threshold=50., threshold_limits=(35, 65), verbose=True, **kwargs):
+    def __init__(self, data, bandwidth=2.0, default_threshold=50., threshold_limits=(35, 65), verbose=True, condition=None, **kwargs):
         BasePlotting.__init__(self, **kwargs)
         self.data = data
         self.bandwidth = bandwidth
@@ -23,6 +23,7 @@ class EyeConvergenceAnalyser(BasePlotting):
         self.threshold = default_threshold
         self.min_threshold = min(threshold_limits)
         self.max_threshold = max(threshold_limits)
+        self.condition = condition
 
     def kernel_density_estimation(self):
         """Performs kernel density estimation of the data using a gaussian with the given bandwidth.
@@ -197,7 +198,7 @@ class EyeConvergenceAnalyser(BasePlotting):
         else:
             plt.show()
 
-    def plot_threshold(self, save=False, output_path=None):
+    def plot_threshold(self, save=False, output_path=None, condition=None):
         """Plots a histogram of observed eye vergence angles and the estimated distribution.
 
         Makes two subplots. The left subplot shows the estimated distribution of eye vergence angles with everything
@@ -215,6 +216,11 @@ class EyeConvergenceAnalyser(BasePlotting):
         """
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), sharex=True, sharey=True)
         fig.suptitle('Eye convergence threshold')
+        if self.condition != None:
+            fig.text(0.85,0.9, self.condition) # include the experimental condition in plot
+            print(f'Fish condition: {self.condition}')
+        else:
+            print('No condition loaded.')
 
         converged = self.bin_edges >= self.threshold
 
@@ -365,10 +371,11 @@ class EyeTrackingData(object):
 
         print_heading('CALCULATING CONVERGENCE SCORES')
         IDs, scores, thresholds = [], [], []
-        for ID in self.metadata["ID"]: #need to fix this!!!
+        for ID in self.metadata["ID"]:
             print_subheading(ID)
+            condition = self.metadata.loc[self.metadata['ID'] == ID, 'condition'].values[0]
 
-            ECA = EyeConvergenceAnalyser(self.data[ID]['convergence'], **kwargs)
+            ECA = EyeConvergenceAnalyser(self.data[ID]['convergence'], condition=condition, **kwargs)
             ECA.kernel_density_estimation()
             ECA.find_convergence_threshold()
             ECA.calculate_convergence_score()
@@ -380,7 +387,7 @@ class EyeTrackingData(object):
 
             if save_plots_to is not None:
                 plot_path = os.path.join(save_plots_to, ID + '.png')
-                ECA.plot_threshold(save=True, output_path=plot_path)
+                ECA.plot_threshold(save=True, output_path=plot_path, condition=self.metadata[self.metadata['ID']==ID]['condition'])
 
             self.analysers[ID] = ECA
 

@@ -308,6 +308,7 @@ class BehaviorExperiment:
         else:
             animal_info = self.animal_data[self.animal_data['ID'] == ID].iloc[0]
             video_info = self.video_data[self.video_data['ID'] == ID]
+
         return animal_info, video_info
 
     def update(self):
@@ -318,6 +319,20 @@ class BehaviorExperiment:
                 if not animal_info['ID'] in self.animal_data['ID'].values:
                     self.animal_data = self.animal_data.append(animal_info, ignore_index=True)
                     self.video_data = self.video_data.append(video_info, ignore_index=True)
+                ### modified lines start here (opening the csv with excel messed with the code, had to fix it somehow)
+                else:
+                    video_paths = animal_directory.glob('*.avi')
+                    for code in video_info.code:
+                        for ID in video_info.ID:
+                            for path in video_paths:
+                                correct_code = self.video_code_function(ID, str(path))
+                                for p in video_info.path:
+                                    if code != correct_code:
+                                        path_stem = str(path.stem)
+                                        if path_stem in p:
+                                            idx = video_info[video_info['path'] == p].index
+                                            self.video_data['code'].loc[idx] = correct_code
+                #######
             self.animal_data.to_csv(self.animal_data_path, index=False)
             self.video_data.to_csv(self.video_data_path, index=False)
 
@@ -391,18 +406,19 @@ class BehaviorExperiment:
             # Assign path
             bg_path = self.directory.joinpath('backgrounds', fish['ID'] + '.tiff')
             output_path = self.directory.joinpath('circles', fish['ID'] + '.tiff')
-            # Initialize Mask Generator
-            masker = MaskGenerator(blur=int(fish['blur']),
-                                   dp=int(fish['dp']),
-                                   mindist=int(fish['mindist']),
-                                   param1=int(fish['param1']),
-                                   param2=int(fish['param2']))
-            result = masker.run(bg_path, output_path)
-            # Append to mask info
-            mask_info['ID'].append(fish['ID'])
-            mask_info['center_x'].append(result[0])
-            mask_info['center_y'].append(result[1])
-            mask_info['radius'].append(result[2])
+            if (bg_path.exists()) & (not output_path.exists()): # only call the function if the mask hasn't been generated yet
+                # Initialize Mask Generator
+                masker = MaskGenerator(blur=int(fish['blur']),
+                                    dp=int(fish['dp']),
+                                    mindist=int(fish['mindist']),
+                                    param1=int(fish['param1']),
+                                    param2=int(fish['param2']))
+                result = masker.run(bg_path, output_path)
+                # Append to mask info
+                mask_info['ID'].append(fish['ID'])
+                mask_info['center_x'].append(result[0])
+                mask_info['center_y'].append(result[1])
+                mask_info['radius'].append(result[2])
         # Write center
         mask_info = pd.DataFrame(mask_info, columns=self.mask_columns)
         self.mask_data = self.mask_data.append(mask_info, ignore_index=True)
